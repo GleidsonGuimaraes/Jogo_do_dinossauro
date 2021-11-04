@@ -64,7 +64,6 @@ function createCactus() {
                 gameNivel -= 5;
                 controleNivel = 0;
             }
-            console.log(gameNivel, controleNivel);
         } else if(cactusPosition > 155 && cactusPosition < 205 && position < 60){
             // condição para conferir se é game over
             clearInterval(leftInterval);
