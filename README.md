@@ -1,5 +1,7 @@
 # Replica do dino game do google
 
+![DinoGame](img/Dino_Game.gif)
+
 ## Links úteis
 
 * https://web.digitalinnovation.one/
