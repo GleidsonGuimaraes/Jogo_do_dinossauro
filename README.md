@@ -1,9 +1,9 @@
-# Replica do dino game do google
+# Replica do dino game tematizado com o Megaman X
 
-![DinoGame](img/Dino_Game.gif)
 
 ## Links úteis
 
-* https://web.digitalinnovation.one/
-* https://www.w3schools.com/
-* https://developer.mozilla.org/pt-BR/
+* [Digital Innovation One](https://web.dio.me/)
+* [CFB Cursos](https://www.youtube.com/c/cfbcursos)
+* [W3Schools](https://www.w3schools.com/)
+* [MDN](https://developer.mozilla.org/pt-BR/)
