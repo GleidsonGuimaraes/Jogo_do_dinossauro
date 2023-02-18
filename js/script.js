@@ -1,5 +1,6 @@
-let imgs = [], imgAtual = 1, imgMax;
-let imgs1 = [], imgAtual1 = 1, imgMax1;
+let imgs = [], imgAtual = 1;
+let imgs1 = [], imgAtual1 = 1;
+let imgs2 = [], imgAtual2 = 1;
 let animar;
 let saltando = false;
 let posicaoY = 230;
@@ -16,6 +17,10 @@ function preCarregarImgs1(){
     imgs1[i] = new Image();
     imgs1[i].src = `img/ms${i}.png`;
   };
+  for(let i = 1; i < 3; i++){
+    imgs2[i] = new Image();
+    imgs2[i].src = `img/v${i}.png`;
+  }
 }
 
 function aperteSetaCima(event) {
@@ -58,7 +63,7 @@ function pular() {
 }
 
 function correr(){
-  if(imgAtual > imgMax){
+  if(imgAtual > imgs.length-1){
     imgAtual = 1;
   }
   mega.style.backgroundImage = `url(${imgs[imgAtual].src})`;
@@ -73,25 +78,33 @@ function megaSaltando(){
   imgAtual1++;
 }
 
-// FALTA CRIAR A FUNÇÃO DE GAME OVER
 function inimigos(){
   let posicaoIni = 0;
 
   const ini = document.createElement('div');
   ini.classList.add('inimigo');
-  ini.style.width = "150px";
+  ini.style.width = "180px";
   ini.style.height = "150px";
-  ini.style.background = "#f00";
   ini.style.position = "absolute";
   ini.style.bottom = "230px";
-  ini.style.right = posicaoIni + "px";
+  ini.style.right = "100px";
   background.appendChild(ini);
 
+  let animarVileDash = setInterval(()=>{
+    if(imgAtual2 > imgs2.length-1){
+      imgAtual2 = 1;
+    }
+    ini.style.background = `url(${imgs2[imgAtual2].src})`;
+    imgAtual2++;
+  }, 50);
+  
   let movEsquerda = setInterval(()=>{
     if(posicaoIni > 1350){
+      clearInterval(animarVileDash);
+      clearInterval(movEsquerda);
       background.removeChild(ini);
     }else{
-      posicaoIni += 10;
+      posicaoIni += 20;
       ini.style.right = posicaoIni + "px";
     }
   }, 25);
@@ -99,9 +112,8 @@ function inimigos(){
 
 function iniciar(){
   preCarregarImgs1();
-  imgMax = imgs.length-1;
   animar = setInterval(correr, 80);
-  // let criar = setInterval(inimigos, 4000);
+  let criar = setInterval(inimigos, 5000);
   window.addEventListener("keydown", aperteSetaCima);
 }
 
