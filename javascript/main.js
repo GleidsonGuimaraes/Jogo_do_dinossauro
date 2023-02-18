@@ -7,8 +7,8 @@ let gameNivel = 25; // nivel inicial de velocidade dos cactus
 let controleNivel = 0; // controle dos niveis
 
 // verificando o valor recebido pelo dispositivo de entrada
-function handleKeyUp(event) {
-    if (event.keyCode === 32){
+function handleKeyDown(event) {
+    if (event.code === 'ArrowUp'){
         if(!isJumping) {
             jump();
         }
@@ -89,4 +89,4 @@ function createCactus() {
 // chamando a função
 createCactus();
 // recebendo o evento keyup e passando para a função
-document.addEventListener('keyup', handleKeyUp);
+document.addEventListener('keydown', handleKeyDown);
