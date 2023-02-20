@@ -1,13 +1,13 @@
 let imgs = [], imgAtual = 1;
 let imgs1 = [], imgAtual1 = 1;
 let imgs2 = [], imgAtual2 = 1;
-let animar;
-let criar;
-let saltando = false;
+let animar, criar, gameOverMovimento;
+let saltando = false, fimDeJogo = false;
 let posicaoY = 230;
 
 const mega = document.getElementById("mega");
 const background = document.querySelector(".background");
+const gOver = document.createElement('div');
 
 function preCarregarImgs1(){
   for(let i = 1; i < 10; i++){
@@ -24,8 +24,24 @@ function preCarregarImgs1(){
   }
 }
 
+function correr(){
+  if(imgAtual > imgs.length-1){
+    imgAtual = 1;
+  }
+  mega.style.backgroundImage = `url(${imgs[imgAtual].src})`;
+  imgAtual++;
+}
+
+function megaSaltando(){
+  if(imgAtual1 > imgs1.length-1){
+    imgAtual1 = 1;
+  }
+  mega.style.backgroundImage = `url(${imgs1[imgAtual1].src})`;
+  imgAtual1++;
+}
+
 function aperteSetaCima(event) {
-  if (event.code === 'ArrowUp'){
+  if (event.code === 'ArrowUp' || event.code === 'Space'){
       if(!saltando) {
         saltando = true;
         if(saltando){
@@ -34,6 +50,22 @@ function aperteSetaCima(event) {
           animar = setInterval(megaSaltando, 90);
         }
       }
+  }
+}
+
+function aperteParaIniciar(event){
+  if(event.code === 'Enter'){
+    if(fimDeJogo){
+      fimDeJogo = false;
+      clearInterval(gameOverMovimento);
+      background.removeChild(gOver);
+      clearInterval(animar);
+      background.style.animation = "slideright 600s infinite linear";
+      iniciar();
+      background.appendChild(mega);
+    }else{
+      iniciar();
+    }
   }
 }
 
@@ -63,25 +95,9 @@ function pular() {
   }, 20); // velocidade de subida
 }
 
-function correr(){
-  if(imgAtual > imgs.length-1){
-    imgAtual = 1;
-  }
-  mega.style.backgroundImage = `url(${imgs[imgAtual].src})`;
-  imgAtual++;
-}
-
-function megaSaltando(){
-  if(imgAtual1 > imgs1.length-1){
-    imgAtual1 = 1;
-  }
-  mega.style.backgroundImage = `url(${imgs1[imgAtual1].src})`;
-  imgAtual1++;
-}
-
 function gameOver(){
+  fimDeJogo = true;
   background.style.animation = "none";
-  const gOver = document.createElement('div');
   gOver.innerText = "Game Over!";
   gOver.setAttribute('id', 'game-over');
   background.appendChild(gOver);
@@ -89,7 +105,7 @@ function gameOver(){
   let movDireita = true;
   let posicaoX = 500;
 
-  let gameOverMovimento = setInterval(()=>{
+  gameOverMovimento = setInterval(()=>{
     if(movDireita){
       posicaoX += 2;
       gOver.style.left = `${posicaoX}px`;
@@ -155,4 +171,4 @@ function iniciar(){
   window.addEventListener("keydown", aperteSetaCima);
 }
 
-window.addEventListener("load",iniciar);
+window.addEventListener("keydown", aperteParaIniciar);
