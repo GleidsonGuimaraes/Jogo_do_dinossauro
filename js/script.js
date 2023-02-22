@@ -2,12 +2,15 @@ let imgs = [], imgAtual = 1;
 let imgs1 = [], imgAtual1 = 1;
 let imgs2 = [], imgAtual2 = 1;
 let animar, criar, gameOverMovimento;
-let saltando = false, fimDeJogo = false;
+let saltando = false, fimDeJogo = false, inicioDeJogo = false;
 let posicaoY = 230;
+let contador = 0, pontuacaoMaxima = 0, pontuacao;
 
 const mega = document.getElementById("mega");
 const background = document.querySelector(".background");
 const gOver = document.createElement('div');
+const divPontuacao = document.getElementById('point');
+const divMaxPontuacao = document.getElementById('maxPoint');
 
 function preCarregarImgs1(){
   for(let i = 1; i < 10; i++){
@@ -61,23 +64,34 @@ function aperteParaIniciar(event){
       background.removeChild(gOver);
       clearInterval(animar);
       background.style.animation = "slideright 600s infinite linear";
-      iniciar();
+      if(!inicioDeJogo){
+        divPontuacao.innerText = contador;
+        iniciar();
+        inicioDeJogo = true;
+      }
       background.appendChild(mega);
     }else{
-      iniciar();
+      if(!inicioDeJogo){
+        divPontuacao.innerText = contador;
+        iniciar();
+        inicioDeJogo = true;
+      }
     }
   }
+}
+
+function pontuar(){
+  contador++;
+  divPontuacao.innerText = contador;
 }
 
 function pular() {
   
   let upInterval = setInterval(() => {
-      if (posicaoY >= 480){ // definindo um limite de altura para o salto
+      if (posicaoY >= 480){
           clearInterval(upInterval);
-          
-          // Descendo
           let downInterval = setInterval(() => {
-              if(posicaoY <= 230){ // verificando um limite para a base do dino
+              if(posicaoY <= 230){
                   clearInterval(downInterval);
                   saltando = false;
                   clearInterval(animar);
@@ -86,16 +100,22 @@ function pular() {
                   posicaoY -= 15;
                   mega.style.bottom = `${posicaoY}px`;
               }
-          }, 20); // velocidade de descida
+          }, 20);
       } else {
-          // Subindo
           posicaoY += 20;
           mega.style.bottom = `${posicaoY}px`;
       }
-  }, 20); // velocidade de subida
+  }, 20);
 }
 
 function gameOver(){
+  clearInterval(pontuacao);
+  if(contador > pontuacaoMaxima){
+    pontuacaoMaxima = contador;
+  }
+  divMaxPontuacao.innerText = pontuacaoMaxima;
+  contador = 0;
+  inicioDeJogo = false;
   fimDeJogo = true;
   background.style.animation = "none";
   gOver.innerText = "Game Over!";
@@ -120,8 +140,6 @@ function gameOver(){
       }
     }
   }, 25);
-
-  console.log(gOver);
 }
 
 function inimigos(){
@@ -156,7 +174,6 @@ function inimigos(){
       background.removeChild(ini);
       background.removeChild(mega);
       gameOver();
-      console.log("GameOver");
     }else{
       posicaoIni -= 20;
       ini.style.left = posicaoIni + "px";
@@ -168,6 +185,7 @@ function iniciar(){
   preCarregarImgs1();
   animar = setInterval(correr, 80);
   criar = setInterval(inimigos, 5000);
+  pontuacao = setInterval(pontuar,250);
   window.addEventListener("keydown", aperteSetaCima);
 }
 
