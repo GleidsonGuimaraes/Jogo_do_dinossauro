@@ -1,8 +1,8 @@
 let imgs = [], imgAtual = 1;
 let imgs1 = [], imgAtual1 = 1;
 let imgs2 = [], imgAtual2 = 1;
-let animar, criar, gameOverMovimento;
-let saltando = false, fimDeJogo = false, inicioDeJogo = false;
+let animar, criarInimigo, gameOverMovimento;
+let saltando = false, fimDeJogo = false;
 let posicaoY = 230;
 let contador = 0, pontuacaoMaxima = 0, pontuacao;
 
@@ -36,9 +36,6 @@ function correr(){
 }
 
 function megaSaltando(){
-  if(imgAtual1 > imgs1.length-1){
-    imgAtual1 = 1;
-  }
   mega.style.backgroundImage = `url(${imgs1[imgAtual1].src})`;
   imgAtual1++;
 }
@@ -47,9 +44,9 @@ function aperteSetaCima(event) {
   if (event.code === 'ArrowUp' || event.code === 'Space'){
       if(!saltando) {
         saltando = true;
-        if(saltando){
-          clearInterval(animar);
-          pular();
+        clearInterval(animar);
+        pular();
+        if(!fimDeJogo){
           animar = setInterval(megaSaltando, 90);
         }
       }
@@ -64,25 +61,15 @@ function aperteParaIniciar(event){
       background.removeChild(gOver);
       clearInterval(animar);
       background.style.animation = "slideright 600s infinite linear";
-      if(!inicioDeJogo){
-        divPontuacao.innerText = contador;
-        iniciar();
-        inicioDeJogo = true;
-      }
+      divPontuacao.innerText = contador;
+      iniciar();
       background.appendChild(mega);
     }else{
-      if(!inicioDeJogo){
-        divPontuacao.innerText = contador;
-        iniciar();
-        inicioDeJogo = true;
-      }
+      divPontuacao.innerText = contador;
+      iniciar();
+      background.appendChild(mega);
     }
   }
-}
-
-function pontuar(){
-  contador++;
-  divPontuacao.innerText = contador;
 }
 
 function pular() {
@@ -92,6 +79,7 @@ function pular() {
           clearInterval(upInterval);
           let downInterval = setInterval(() => {
               if(posicaoY <= 230){
+                  imgAtual1 = 1;
                   clearInterval(downInterval);
                   saltando = false;
                   clearInterval(animar);
@@ -109,15 +97,13 @@ function pular() {
 }
 
 function gameOver(){
+  fimDeJogo = true;
   clearInterval(pontuacao);
   if(contador > pontuacaoMaxima){
     pontuacaoMaxima = contador;
   }
   divMaxPontuacao.innerText = pontuacaoMaxima;
   contador = 0;
-  inicioDeJogo = false;
-  fimDeJogo = true;
-  background.style.animation = "none";
   gOver.innerText = "Game Over!";
   gOver.setAttribute('id', 'game-over');
   background.appendChild(gOver);
@@ -169,8 +155,9 @@ function inimigos(){
     }else if(posicaoIni > 100 && posicaoIni < 200 && posicaoY < 400){
       clearInterval(animarVileDash);
       clearInterval(movEsquerda);
-      clearInterval(criar);
+      clearInterval(criarInimigo);
       clearInterval(animar);
+      background.style.animation = "none";
       background.removeChild(ini);
       background.removeChild(mega);
       gameOver();
@@ -184,8 +171,11 @@ function inimigos(){
 function iniciar(){
   preCarregarImgs1();
   animar = setInterval(correr, 80);
-  criar = setInterval(inimigos, 5000);
-  pontuacao = setInterval(pontuar,250);
+  criarInimigo = setInterval(inimigos, 5000);
+  pontuacao = setInterval(()=>{
+    contador++;
+    divPontuacao.innerText = contador;
+  }, 250);
   window.addEventListener("keydown", aperteSetaCima);
 }
 
