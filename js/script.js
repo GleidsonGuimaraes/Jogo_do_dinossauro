@@ -2,7 +2,7 @@ let imgs = [], imgAtual = 1;
 let imgs1 = [], imgAtual1 = 1;
 let imgs2 = [], imgAtual2 = 1;
 let animar, criarInimigo, gameOverMovimento;
-let saltando = false, fimDeJogo = false;
+let saltando = false, fimDeJogo = false, inicioDeJogo = false;
 let posicaoY = 230;
 let contador = 0, pontuacaoMaxima = 0, pontuacao;
 
@@ -56,6 +56,7 @@ function aperteSetaCima(event) {
 function aperteParaIniciar(event){
   if(event.code === 'Enter'){
     if(fimDeJogo){
+      inicioDeJogo = true;
       fimDeJogo = false;
       clearInterval(gameOverMovimento);
       background.removeChild(gOver);
@@ -64,8 +65,10 @@ function aperteParaIniciar(event){
       divPontuacao.innerText = contador;
       iniciar();
       background.appendChild(mega);
-    }else{
+    }else if(!inicioDeJogo){
+      inicioDeJogo = true;
       divPontuacao.innerText = contador;
+      background.style.animation = "slideright 600s infinite linear";
       iniciar();
       background.appendChild(mega);
     }
@@ -98,6 +101,7 @@ function pular() {
 
 function gameOver(){
   fimDeJogo = true;
+  inicioDeJogo = false;
   clearInterval(pontuacao);
   if(contador > pontuacaoMaxima){
     pontuacaoMaxima = contador;
